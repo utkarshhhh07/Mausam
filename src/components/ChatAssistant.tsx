@@ -14,28 +14,69 @@ const SUGGESTED_QUESTIONS = [
   "Is my commute safe today?",
 ];
 
-function buildResponse(input: string, personas: string[], locationName: string): string {
+function buildResponse(
+  input: string,
+  personas: string[],
+  healthSensitivities: string[],
+  locationName: string
+): string {
   const q = input.toLowerCase();
+  const has = (p: string) => personas.includes(p);
+  const sensitive = (s: string) => healthSensitivities.includes(s);
 
-  if (q.includes("event") || q.includes("outdoor") || q.includes("spot") || q.includes("location")) {
-    return `Based on today's forecast near ${locationName}, open lawns and rooftop venues look good — clear skies until around 2 PM with low wind. I'd wrap up before 4 PM since there's a strong chance of rain after that. Want me to check a specific time window?`;
+  // Outdoor events / travel / general location
+  if (q.includes("event") || q.includes("outdoor") || q.includes("spot") || q.includes("location") || q.includes("garden") || q.includes("plant")) {
+    if (has("garden")) {
+      return `Soil moisture looks good for planting near ${locationName} this week — light rain expected Thursday should help. No frost risk in the forecast right now.`;
+    }
+    if (has("beach")) {
+      return `Sea conditions near ${locationName} look calm today — low tide around 3 PM, wave height under 1m. Good window for beach plans before evening clouds roll in.`;
+    }
+    if (has("events") || has("travel")) {
+      return `Based on today's forecast near ${locationName}, open lawns and rooftop venues look good — clear skies until around 2 PM with low wind. I'd wrap up before 4 PM since there's a strong chance of rain after that.`;
+    }
+    return `For outdoor plans near ${locationName}, mornings look clearest today — conditions get less predictable after 4 PM. Want me to check a specific activity?`;
   }
 
+  // Fitness / running
   if (q.includes("run") || q.includes("jog") || q.includes("workout") || q.includes("exercise") || q.includes("fitness")) {
-    return `Your best window today is 6:00–7:30 AM — wind is calm and UV is still low. After 9 AM the UV index climbs to Very High, so I'd avoid outdoor cardio past that.`;
+    if (has("fitness")) {
+      let extra = "";
+      if (sensitive("respiratory")) extra = " Air quality is also mild this morning, so it's a good window if you're managing respiratory sensitivity.";
+      if (sensitive("sun")) extra = " Since you've flagged sun sensitivity, I'd still go with SPF even in that early window.";
+      return `Your best running window today is 6:00–7:30 AM — wind is calm and UV is still low.${extra} After 9 AM the UV index climbs to Very High, so I'd avoid outdoor cardio past that.`;
+    }
+    return `You haven't set Fitness as a focus area, but generally 6:00–7:30 AM is the calmest window today near ${locationName} if you're heading out.`;
   }
 
+  // Commute / family / school
   if (q.includes("commute") || q.includes("traffic") || q.includes("drive") || q.includes("school")) {
-    return `Heads up — heavier rain is expected between 4–7 PM, right around typical commute hours. Leaving about 15 minutes earlier than usual should help you beat the worst of it.`;
+    if (has("family") || has("commute")) {
+      return `Heads up — heavier rain is expected between 4–7 PM, right around typical commute and school-pickup hours near ${locationName}. Leaving about 15 minutes earlier should help you beat the worst of it.`;
+    }
+    return `Rain is likely between 4–7 PM near ${locationName} today, which could affect travel times if you're heading out during that window.`;
   }
 
+  // Air quality / health
   if (q.includes("air") || q.includes("aqi") || q.includes("pollution") || q.includes("breath")) {
-    return `Air quality is best before 9 AM today. If you're sensitive to pollution${
-      personas.includes("health") ? " — noted from your Health preferences" : ""
-    }, I'd keep outdoor time light in the afternoon when levels tend to rise.`;
+    let note = "";
+    if (sensitive("respiratory")) note = " Since you've noted respiratory sensitivity, I'd be extra cautious in the afternoon.";
+    if (sensitive("allergy")) note += " Pollen levels are also trending moderate today.";
+    if (has("health")) {
+      return `Air quality is best before 9 AM today near ${locationName}.${note} I'd keep outdoor time light in the afternoon when levels tend to rise.`;
+    }
+    return `Air quality near ${locationName} is best in the morning today, dipping a bit by afternoon.`;
   }
 
-  return `I'm still learning that one! Try asking about outdoor plans, workout timing, or your commute — I can give you a personalized read on today's conditions in ${locationName}.`;
+  // Sun/UV/skin
+  if (q.includes("uv") || q.includes("sun") || q.includes("skin") || q.includes("spf")) {
+    const note = sensitive("sun") ? " Given your sun sensitivity, I'd reapply SPF every 2 hours if you're out past 11 AM." : "";
+    return `UV index peaks around 1 PM today near ${locationName} — Very High.${note} Best to limit direct exposure between 11 AM and 3 PM.`;
+  }
+
+  // fallback — mention their actual selected focuses to feel personalized even when unmatched
+  const focusList = personas.length > 0 ? personas.join(", ") : "general weather";
+  return `I'm still learning that one! Based on your selected focus areas (${focusList}), try asking about outdoor plans, workouts, commute timing, or air quality — I can give you a personalized read for ${locationName}.`;
 }
 
 export function ChatAssistant() {
@@ -64,7 +105,7 @@ export function ChatAssistant() {
     setTyping(true);
 
     setTimeout(() => {
-      const reply = buildResponse(text, prefs.personas, location.name);
+      const reply = buildResponse(text, prefs.personas, prefs.healthSensitivities, location.name);
       setMessages((m) => [...m, { id: `${Date.now()}-a`, role: "assistant", text: reply }]);
       setTyping(false);
     }, 800);
@@ -75,7 +116,7 @@ export function ChatAssistant() {
       {/* Floating bubble */}
       <button
         onClick={() => setOpen(true)}
-        className={`fixed bottom-6 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-brand-600 text-white shadow-lg transition hover:bg-brand-700 lg:bottom-6 ${
+        className={`fixed bottom-40 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-brand-600 text-white shadow-lg transition hover:bg-brand-700 lg:bottom-6 ${
           open ? "hidden" : "flex"
         }`}
         aria-label="Open Mausam Assistant"
@@ -86,7 +127,7 @@ export function ChatAssistant() {
 
       {/* Chat panel */}
       {open && (
-        <div className="fixed bottom-24 left-4 z-50 flex h-[480px] w-[340px] max-w-[90vw] flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl">
+        <div className="fixed bottom-24 right-4 z-50 flex h-[480px] w-[340px] max-w-[90vw] flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
             <div className="flex items-center gap-2">
