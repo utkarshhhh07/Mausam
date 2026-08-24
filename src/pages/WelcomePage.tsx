@@ -49,7 +49,7 @@ export function WelcomePage() {
       {/* CTAs */}
       <div className="space-y-3 safe-bottom">
         <button
-          onClick={() => navigate("/onboarding/location")}
+          onClick={() => navigate("/signup")}
           className="btn-primary w-full"
         >
           {t("welcome.getStarted")}
