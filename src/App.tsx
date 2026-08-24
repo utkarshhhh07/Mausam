@@ -15,6 +15,8 @@ import { SavedPage } from "@/pages/SavedPage";
 import { MyDayPage } from "@/pages/MyDayPage";
 import { ProfilePage } from "@/pages/ProfilePage";
 import { useEffect, useState } from "react";
+import { LoginPage } from "@/pages/LoginPage";
+import { SignupPage } from "@/pages/SignupPage";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -38,6 +40,9 @@ function SplashGate() {
   return (
     <Routes>
       <Route path="/welcome" element={<WelcomePage />} />
+      <Route path="/welcome" element={<WelcomePage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
       <Route path="/onboarding" element={<OnboardingLayout />}>
         <Route path="location" element={<LocationSelectPage />} />
         <Route path="persona" element={<PersonaSelectPage />} />

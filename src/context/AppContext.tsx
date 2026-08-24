@@ -18,10 +18,14 @@ interface AppState {
   savedLocationIds: string[];
   prefs: UserPreferences;
   feedback: FeedbackEntry[];
+  user: { id: string; name: string; email: string } | null;
+  token: string | null;
 }
 
 interface AppContextValue extends AppState {
   location: LocationInfo;
+  setAuth: (user: { id: string; name: string; email: string }, token: string) => void;
+  logout: () => void;
   setOnboarded: (v: boolean) => void;
   setLocationId: (id: string) => void;
   toggleSavedLocation: (id: string) => void;
@@ -33,6 +37,7 @@ interface AppContextValue extends AppState {
   addFeedback: (cardId: string, value: FeedbackValue, tags?: string[]) => void;
   applyScenario: (scenarioId: string) => void;
   resetAll: () => void;
+
 }
 
 const DEFAULT_PREFS: UserPreferences = {
@@ -49,6 +54,8 @@ const DEFAULT_STATE: AppState = {
   savedLocationIds: ["pune"],
   prefs: DEFAULT_PREFS,
   feedback: [],
+  user: null,
+  token: null,
 };
 
 function loadState(): AppState {
@@ -61,6 +68,8 @@ function loadState(): AppState {
       ...parsed,
       prefs: { ...DEFAULT_PREFS, ...(parsed.prefs ?? {}) },
       feedback: parsed.feedback ?? [],
+      user: parsed.user ?? null,
+      token: parsed.token ?? null,
     };
   } catch {
     return DEFAULT_STATE;
@@ -164,6 +173,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
           : [...s.savedLocationIds, sc.locationId],
       }));
     },
+    setAuth: (user, token) => setState((s) => ({ ...s, user, token })),
+    logout: () => setState((s) => ({ ...s, user: null, token: null, onboarded: false })),
     resetAll: () => {
       setState(DEFAULT_STATE);
       try {
