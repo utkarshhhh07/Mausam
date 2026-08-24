@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { BottomNavigation, SideNavigation } from "@/components/BottomNavigation";
 import { DemoModeButton } from "@/components/DemoModeButton";
+import { ChatAssistant } from "@/components/ChatAssistant";
 
 export function AppLayout() {
   return (
@@ -15,6 +16,7 @@ export function AppLayout() {
         <BottomNavigation />
       </div>
       <DemoModeButton />
+      <ChatAssistant />
     </div>
   );
 }
