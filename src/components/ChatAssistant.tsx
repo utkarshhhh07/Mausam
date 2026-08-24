@@ -188,11 +188,19 @@ export function ChatAssistant() {
         location.name,
         lastTopic
       );
+      setMessages((m) => [
+      ...m,
+      {
+        id: `${Date.now()}-a`,
+        role: "assistant",
+        text: reply,
+      },
+      ]);
       setLastTopic(topic);
       setTyping(false);
     }, 800);
   }
-  const chips = lastTopic ? FOLLOW_UPS[lastTopic] : PRIMARY_QUESTIONS;  console.error("🔥 LAST TOPIC:", lastTopic);
+  const chips = lastTopic ? FOLLOW_UPS[lastTopic] : PRIMARY_QUESTIONS;
 
 
 
