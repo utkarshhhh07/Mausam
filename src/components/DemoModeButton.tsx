@@ -26,7 +26,7 @@ export function DemoModeButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-20 right-4 z-30 inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-3.5 py-2.5 text-xs font-semibold text-white shadow-lg transition active:scale-95 hover:bg-slate-800 lg:bottom-6 lg:right-6"
+        className="fixed bottom-24 right-4 z-30 inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-3.5 py-2.5 text-xs font-semibold text-white shadow-lg transition active:scale-95 hover:bg-slate-800 lg:bottom-6 lg:right-6"
         aria-label={t("demo.title")}
       >
         <FlaskConical size={14} />

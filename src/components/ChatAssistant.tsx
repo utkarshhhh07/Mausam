@@ -8,76 +8,153 @@ type ChatMessage = {
   text: string;
 };
 
-const SUGGESTED_QUESTIONS = [
-  "Good spot for an outdoor event today?",
-  "Best time to go running?",
-  "Is my commute safe today?",
+type Topic = "outdoor" | "fitness" | "commute" | "air" | "uv" | "clothing" | "travel" | "allergy" | "rain";
+
+const PRIMARY_QUESTIONS = [
+  "Is there a good time for outdoor activities today?",
+  "What's the best time for a workout today?",
+  "What should I wear today?",
 ];
+
+// Shown after a reply, based on the topic just discussed
+const FOLLOW_UPS: Record<Topic, string[]> = {
+  outdoor: ["What about tomorrow?", "Any allergy concerns today?", "What should I wear?"],
+  fitness: ["What about air quality?", "Best time tomorrow?", "Any UV precautions?"],
+  commute: ["Should I leave earlier?", "What about the school run?", "Any rain expected later?"],
+  air: ["Is it safe to exercise?", "Any allergy concerns?", "What about tomorrow?"],
+  uv: ["What should I wear?", "Best time to be outside?", "Any skin precautions?"],
+  clothing: ["Do I need an umbrella?", "What about tomorrow?", "Is it humid today?"],
+  travel: ["What should I pack?", "Any weather risk at my destination?", "Best time to leave?"],
+  allergy: ["Is air quality bad today?", "Should kids stay indoor?", "What about tomorrow?"],
+  rain: ["Should I leave earlier?", "Is it safe for events today?", "What about the weekend?"],
+};
+
+const TOPIC_KEYWORDS: Record<Topic, string[]> = {
+  outdoor: ["event", "outdoor", "spot", "location", "garden", "plant", "park", "picnic"],
+  fitness: ["run", "jog", "workout", "exercise", "fitness", "gym"],
+  commute: ["commute", "traffic", "drive", "school", "pickup"],
+  air: ["air", "aqi", "pollution", "breath"],
+  uv: ["uv", "sun", "skin", "spf"],
+  clothing: ["wear", "outfit", "clothes", "clothing", "jacket"],
+  travel: ["travel", "trip", "pack", "packing", "destination"],
+  allergy: ["allergy", "allergies", "pollen", "sneeze"],
+  rain: ["rain", "umbrella", "shower", "monsoon", "wet"],
+};
+
+function detectTopic(q: string): Topic | null {
+  for (const [topic, words] of Object.entries(TOPIC_KEYWORDS) as [Topic, string[]][]) {
+    if (words.some((w) => q.includes(w))) return topic;
+  }
+  return null;
+}
+
+const FOLLOW_UP_HINTS = ["tomorrow", "then", "what about", "and", "also"];
+
+// Persona-specific notes per topic — every persona the user selected that's relevant gets blended in
+function personaNotes(topic: Topic, personas: string[], sensitivities: string[], loc: string): string[] {
+  const has = (p: string) => personas.includes(p);
+  const sensitive = (s: string) => sensitivities.includes(s);
+  const notes: string[] = [];
+
+  if (topic === "outdoor") {
+    if (has("garden")) notes.push(`soil moisture near ${loc} looks good for planting this week, with no frost risk`);
+    if (has("beach")) notes.push(`sea conditions are calm today — low tide around 3 PM, waves under 1m`);
+    if (has("events")) notes.push(`open lawns and rooftop venues work well until around 2 PM before wind picks up`);
+    if (has("family")) notes.push(`conditions look kid-safe through early afternoon, but I'd head in before evening`);
+    if (has("health") && sensitive("sun")) notes.push(`with your sun sensitivity, stick to shaded spots after 11 AM`);
+  }
+
+  if (topic === "fitness") {
+    if (has("fitness")) notes.push(`6:00–7:30 AM is your calmest window — low wind, low UV`);
+    if (sensitive("respiratory")) notes.push(`air quality is mild this morning, good for a respiratory-sensitive workout`);
+    if (sensitive("sun")) notes.push(`SPF is still worth it even in that early window`);
+  }
+
+  if (topic === "commute") {
+    if (has("commute") || has("family")) notes.push(`heavier rain is expected 4–7 PM near ${loc}, right at commute/pickup hours`);
+    if (has("family")) notes.push(`leaving 15 minutes earlier should help you beat school pickup traffic`);
+  }
+
+  if (topic === "air") {
+    if (has("health")) notes.push(`air quality is best before 9 AM, dipping by afternoon`);
+    if (sensitive("respiratory")) notes.push(`I'd be cautious outdoors in the afternoon given your respiratory sensitivity`);
+    if (sensitive("allergy")) notes.push(`pollen is trending moderate today too`);
+  }
+
+  if (topic === "uv") {
+    if (has("health") || has("fitness") || has("beach")) notes.push(`UV peaks around 1 PM today — Very High`);
+    if (sensitive("sun")) notes.push(`reapply SPF every 2 hours if you're out past 11 AM`);
+  }
+
+  if (topic === "clothing") {
+    if (has("travel")) notes.push(`layer up — mornings are cooler than midday near ${loc}`);
+    if (has("family")) notes.push(`pack a light jacket for kids in case of the afternoon rain`);
+    if (has("garden")) notes.push(`waterproof boots are worth it if you're out in the soil later`);
+  }
+
+  if (topic === "travel") {
+    if (has("travel")) notes.push(`pack for mild mornings and a chance of rain later in the day`);
+    if (has("beach")) notes.push(`if your destination is coastal, sea conditions look calm`);
+    if (has("health")) notes.push(`bring sun protection regardless of destination`);
+  }
+
+  if (topic === "allergy") {
+    if (has("health")) notes.push(`pollen is moderate today near ${loc}`);
+    if (has("family")) notes.push(`keep kids' outdoor time shorter if they're pollen-sensitive`);
+    if (has("garden")) notes.push(`gardening midday will kick up more pollen than early morning`);
+  }
+
+  if (topic === "rain") {
+    if (has("commute") || has("family")) notes.push(`rain builds in around 4 PM — worth an umbrella if you're out later`);
+    if (has("events")) notes.push(`outdoor events should wrap before 4 PM`);
+    if (has("garden")) notes.push(`good news for your plants either way`);
+  }
+
+  return notes;
+}
+
+const TOPIC_FALLBACK: Record<Topic, (loc: string) => string> = {
+  outdoor: (loc) => `Mornings look clearest near ${loc} today — conditions get less predictable after 4 PM.`,
+  fitness: (loc) => `6:00–7:30 AM is generally the calmest window near ${loc} today.`,
+  commute: (loc) => `Rain is likely 4–7 PM near ${loc}, which could affect travel times.`,
+  air: (loc) => `Air quality near ${loc} is best in the morning, dipping a bit by afternoon.`,
+  uv: (loc) => `UV peaks around 1 PM near ${loc} today — Very High. Limit exposure 11 AM–3 PM.`,
+  clothing: (loc) => `Light layers work well near ${loc} today — mild morning, warmer midday.`,
+  travel: (loc) => `Check conditions at your destination — near ${loc} itself, expect a mild start with rain later.`,
+  allergy: (loc) => `Pollen levels near ${loc} are moderate today.`,
+  rain: (loc) => `Rain is expected near ${loc} from around 4 PM onward — worth carrying an umbrella.`,
+};
 
 function buildResponse(
   input: string,
   personas: string[],
   healthSensitivities: string[],
-  locationName: string
-): string {
+  locationName: string,
+  lastTopic: Topic | null
+): { text: string; topic: Topic | null } {
   const q = input.toLowerCase();
-  const has = (p: string) => personas.includes(p);
-  const sensitive = (s: string) => healthSensitivities.includes(s);
+  let topic = detectTopic(q);
 
-  // Outdoor events / travel / general location
-  if (q.includes("event") || q.includes("outdoor") || q.includes("spot") || q.includes("location") || q.includes("garden") || q.includes("plant")) {
-    if (has("garden")) {
-      return `Soil moisture looks good for planting near ${locationName} this week — light rain expected Thursday should help. No frost risk in the forecast right now.`;
-    }
-    if (has("beach")) {
-      return `Sea conditions near ${locationName} look calm today — low tide around 3 PM, wave height under 1m. Good window for beach plans before evening clouds roll in.`;
-    }
-    if (has("events") || has("travel")) {
-      return `Based on today's forecast near ${locationName}, open lawns and rooftop venues look good — clear skies until around 2 PM with low wind. I'd wrap up before 4 PM since there's a strong chance of rain after that.`;
-    }
-    return `For outdoor plans near ${locationName}, mornings look clearest today — conditions get less predictable after 4 PM. Want me to check a specific activity?`;
+  // Follow-up resolution: no topic detected but phrasing implies continuation
+  if (!topic && lastTopic && FOLLOW_UP_HINTS.some((h) => q.includes(h))) {
+    topic = lastTopic;
   }
 
-  // Fitness / running
-  if (q.includes("run") || q.includes("jog") || q.includes("workout") || q.includes("exercise") || q.includes("fitness")) {
-    if (has("fitness")) {
-      let extra = "";
-      if (sensitive("respiratory")) extra = " Air quality is also mild this morning, so it's a good window if you're managing respiratory sensitivity.";
-      if (sensitive("sun")) extra = " Since you've flagged sun sensitivity, I'd still go with SPF even in that early window.";
-      return `Your best running window today is 6:00–7:30 AM — wind is calm and UV is still low.${extra} After 9 AM the UV index climbs to Very High, so I'd avoid outdoor cardio past that.`;
-    }
-    return `You haven't set Fitness as a focus area, but generally 6:00–7:30 AM is the calmest window today near ${locationName} if you're heading out.`;
+  if (!topic) {
+    const focusList = personas.length > 0 ? personas.join(", ") : "general weather";
+    return {
+      text: `I'm still learning that one! Based on your selected focus areas (${focusList}), try asking about outdoor plans, workouts, commute, air quality, UV, clothing, travel, or allergies — I can give you a personalized read for ${locationName}.`,
+      topic: null,
+    };
   }
 
-  // Commute / family / school
-  if (q.includes("commute") || q.includes("traffic") || q.includes("drive") || q.includes("school")) {
-    if (has("family") || has("commute")) {
-      return `Heads up — heavier rain is expected between 4–7 PM, right around typical commute and school-pickup hours near ${locationName}. Leaving about 15 minutes earlier should help you beat the worst of it.`;
-    }
-    return `Rain is likely between 4–7 PM near ${locationName} today, which could affect travel times if you're heading out during that window.`;
-  }
+  const notes = personaNotes(topic, personas, healthSensitivities, locationName);
+  const base = TOPIC_FALLBACK[topic](locationName);
+  const text = notes.length > 0 ? `${base} ${notes.map((n) => n.charAt(0).toUpperCase() + n.slice(1) + ".").join(" ")}` : base;
 
-  // Air quality / health
-  if (q.includes("air") || q.includes("aqi") || q.includes("pollution") || q.includes("breath")) {
-    let note = "";
-    if (sensitive("respiratory")) note = " Since you've noted respiratory sensitivity, I'd be extra cautious in the afternoon.";
-    if (sensitive("allergy")) note += " Pollen levels are also trending moderate today.";
-    if (has("health")) {
-      return `Air quality is best before 9 AM today near ${locationName}.${note} I'd keep outdoor time light in the afternoon when levels tend to rise.`;
-    }
-    return `Air quality near ${locationName} is best in the morning today, dipping a bit by afternoon.`;
-  }
-
-  // Sun/UV/skin
-  if (q.includes("uv") || q.includes("sun") || q.includes("skin") || q.includes("spf")) {
-    const note = sensitive("sun") ? " Given your sun sensitivity, I'd reapply SPF every 2 hours if you're out past 11 AM." : "";
-    return `UV index peaks around 1 PM today near ${locationName} — Very High.${note} Best to limit direct exposure between 11 AM and 3 PM.`;
-  }
-
-  // fallback — mention their actual selected focuses to feel personalized even when unmatched
-  const focusList = personas.length > 0 ? personas.join(", ") : "general weather";
-  return `I'm still learning that one! Based on your selected focus areas (${focusList}), try asking about outdoor plans, workouts, commute timing, or air quality — I can give you a personalized read for ${locationName}.`;
+  return { text, topic };
 }
+
 
 export function ChatAssistant() {
   const { location, prefs } = useApp();
@@ -86,13 +163,12 @@ export function ChatAssistant() {
     {
       id: "welcome",
       role: "assistant",
-      text: `Hi! I'm your Mausam assistant. Ask me about outdoor plans, workouts, or your commute for ${location.name} today.`,
-    },
+      text: `Hi! I'm your Mausam assistant. I can help with your plans today — from outdoor activities and fitness to air quality, UV, clothing, travel, allergies, and your commute.`,    },
   ]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
+  const [lastTopic, setLastTopic] = useState<Topic | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, typing]);
@@ -105,11 +181,20 @@ export function ChatAssistant() {
     setTyping(true);
 
     setTimeout(() => {
-      const reply = buildResponse(text, prefs.personas, prefs.healthSensitivities, location.name);
-      setMessages((m) => [...m, { id: `${Date.now()}-a`, role: "assistant", text: reply }]);
+      const { text: reply, topic } = buildResponse(
+        text,
+        prefs.personas,
+        prefs.healthSensitivities,
+        location.name,
+        lastTopic
+      );
+      setLastTopic(topic);
       setTyping(false);
     }, 800);
   }
+  const chips = lastTopic ? FOLLOW_UPS[lastTopic] : PRIMARY_QUESTIONS;  console.error("🔥 LAST TOPIC:", lastTopic);
+
+
 
   return (
     <>
@@ -165,7 +250,7 @@ export function ChatAssistant() {
 
           {/* Suggested chips */}
           <div className="flex gap-2 overflow-x-auto px-3 pb-2">
-            {SUGGESTED_QUESTIONS.map((q) => (
+            {chips.map((q) => (
               <button
                 key={q}
                 onClick={() => sendMessage(q)}
