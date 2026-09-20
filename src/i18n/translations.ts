@@ -384,6 +384,102 @@ const en: Dict = {
   "reason.health.pollen": "You selected Allergy / Pollen Sensitivity. Pollen level is {level}. This card is shown so you can plan around elevated pollen.",
   "reason.health.pollenUnavailable": "You selected Allergy / Pollen Sensitivity. Pollen data is unavailable for this location, so no pollen-specific recommendation is shown.",
   "reason.health.sun": "You selected Sun / Skin Sensitivity. UV index is {uv}. Because UV is high, sun-safety guidance has been prioritized for you.",
+
+  // Engine — card titles (new)
+  "engine.windSpeed": "Wind Speed",
+  "engine.temperature": "Temperature",
+  "engine.waterTemp": "Water Temperature",
+  "engine.travelAlerts": "Travel Weather Alerts",
+  "engine.rainAlert": "Rain Alert",
+  "engine.weatherWarnings": "Weather Warnings",
+  "engine.seasonalPlanting": "Seasonal Planting Guidance",
+  "engine.fogAlert": "Fog Alert",
+  "engine.stormAlert": "Storm Alert",
+  "engine.trafficAdvisory": "Traffic Advisory",
+  "engine.extendedForecast": "Extended Forecast",
+  "engine.rainProbability": "Probability of Rain",
+
+  // Engine — fitness (new)
+  "engine.fitness.windMeaning": "Wind conditions for your outdoor activity.",
+  "engine.fitness.windRec": "Conditions are suitable for outdoor training.",
+  "engine.fitness.windRecHigh": "Strong winds — consider sheltered routes.",
+  "engine.fitness.tempMeaning": "Current temperature and feels-like temperature.",
+  "engine.fitness.tempRecHot": "Hydrate well and avoid peak sun hours.",
+  "engine.fitness.tempRecNormal": "Comfortable temperature for outdoor activity.",
+  "engine.fitness.heatMeaningNormal": "Temperature and UV are within a comfortable range.",
+  "engine.fitness.heatRecNormal": "Normal outdoor activity is fine.",
+
+  // Engine — health (new)
+  "engine.health.pollenRecLow": "Low pollen — no concerns for most people.",
+  "engine.health.uvMeaningLow": "Low UV — minimal sun protection needed.",
+  "engine.health.uvRecLow": "No special sun protection required.",
+
+  // Engine — beach (new)
+  "engine.beach.waterTempMeaning": "Water temperature for swimming and water activities.",
+  "engine.beach.waterTempRecWarm": "Comfortable for water activities.",
+  "engine.beach.waterTempRecCool": "Water is cool — a wetsuit may be needed.",
+  "engine.beach.waterTempRecNA": "Water temperature data unavailable for this inland location.",
+
+  // Engine — travel (new)
+  "engine.travel.alertsMeaning": "Weather alerts that may affect your travel plans.",
+  "engine.travel.alertsNone": "No active weather alerts for this location.",
+  "engine.travel.alertsActive": "{n} active alert(s) — check before travelling.",
+
+  // Engine — family (new)
+  "engine.family.rainAlertMeaning": "Rain probability for your family's outdoor plans.",
+  "engine.family.rainAlertHigh": "Rain likely — plan indoor alternatives.",
+  "engine.family.rainAlertLow": "Low rain chance — outdoor plans look fine.",
+  "engine.family.warningsMeaning": "Active weather warnings for your area.",
+  "engine.family.warningsNone": "No weather warnings active. Conditions are safe.",
+  "engine.family.warningsActive": "{n} active warning(s) — take precautions.",
+  "engine.family.uvMeaningNormal": "UV levels are moderate for children.",
+  "engine.family.uvRecNormal": "Standard sun protection is sufficient.",
+
+  // Engine — garden (new)
+  "engine.garden.frostNone": "No frost risk — plants are safe.",
+  "engine.garden.frostNoneMeaning": "Frost risk is currently low for your area.",
+  "engine.garden.seasonalMeaning": "Planting guidance based on current weather conditions.",
+  "engine.garden.seasonalRecWet": "Wet conditions — avoid sowing seeds today. Good time for transplanting established seedlings.",
+  "engine.garden.seasonalRecDry": "Dry conditions — water newly sown seeds regularly. Good time for sowing.",
+  "engine.garden.seasonalRecHot": "Hot and dry — provide shade to young plants and water in the early morning or evening.",
+  "engine.garden.seasonalRecNormal": "Favourable conditions for general planting and garden maintenance.",
+
+  // Engine — commute (new)
+  "engine.commute.visibilityMeaning": "Current visibility for your commute.",
+  "engine.commute.visibilityGood": "Good visibility — normal driving conditions.",
+  "engine.commute.visibilityModerate": "Moderate visibility — stay alert.",
+  "engine.commute.fogMeaning": "Fog risk based on current conditions.",
+  "engine.commute.fogRisk": "Fog possible — drive carefully and use fog lights.",
+  "engine.commute.fogNoRisk": "No fog risk — clear roads expected.",
+  "engine.commute.stormMeaning": "Storm alerts for your commute route.",
+  "engine.commute.stormNone": "No storm alerts active for your area.",
+  "engine.commute.stormActive": "Storm alert active — consider delaying non-essential travel.",
+  "engine.commute.trafficMeaning": "Traffic advisory based on current weather (demo).",
+  "engine.commute.trafficNormal": "Weather conditions should not significantly affect traffic.",
+  "engine.commute.trafficRain": "Rain may cause slower traffic and waterlogging on some routes.",
+  "engine.commute.trafficFog": "Reduced visibility may cause traffic delays.",
+  "engine.commute.trafficDemo": "Demo advisory — live traffic data not connected.",
+
+  // Engine — events (new)
+  "engine.events.forecastMeaning": "7-day extended forecast for event planning.",
+  "engine.events.rainProbMeaning": "Rain probability for your outdoor event.",
+  "engine.events.rainProbRec": "Rain is possible — consider a backup plan.",
+  "engine.events.rainProbLow": "Low rain chance — good for outdoor events.",
+
+  // Engine — reasons (new)
+  "reason.fitness.wind": "Fitness is on. Wind speed is {wind} km/h, relevant for outdoor training.",
+  "reason.fitness.temp": "Fitness is on. Temperature is {temp}° (feels {feels}°), important for outdoor activity planning.",
+  "reason.beach.waterTemp": "Beach is on. Water temperature is {temp}°.",
+  "reason.travel.alerts": "Travel is on. Active weather alerts may affect your travel plans.",
+  "reason.family.rain": "Family is on. Rain probability is {rain}%.",
+  "reason.family.warnings": "Family is on. Active weather warnings: {n}.",
+  "reason.garden.seasonal": "Garden is on. Planting guidance is derived from rain, temperature, and soil moisture.",
+  "reason.commute.visibility": "Commute is on. Visibility is {vis} km.",
+  "reason.commute.fog": "Commute is on. Fog risk assessed from visibility and conditions.",
+  "reason.commute.storm": "Commute is on. Storm alerts: {n}.",
+  "reason.commute.traffic": "Commute is on. Traffic advisory is derived from current weather conditions (demo).",
+  "reason.events.forecast": "Events is on. Extended 7-day forecast for planning.",
+  "reason.events.rainProb": "Events is on. Rain probability is {rain}%.",
 };
 
 const hi: Dict = {
@@ -768,6 +864,102 @@ const hi: Dict = {
   "reason.health.pollen": "आपने एलर्जी / पराग संवेदनशीलता चुनी है। पराग स्तर {level} है। यह कार्ड बढ़े हुए पराग के अनुसार योजना के लिए दिखाया गया है।",
   "reason.health.pollenUnavailable": "आपने एलर्जी / पराग संवेदनशीलता चुनी है। इस स्थान के लिए पराग डेटा अनुपलब्ध है, इसलिए पराग-विशिष्ट सिफारिश नहीं दिखाई गई।",
   "reason.health.sun": "आपने धूप / त्वचा संवेदनशीलता चुनी है। UV सूचकांक {uv} है। UV अधिक होने के कारण सूर्य-सुरक्षा मार्गदर्शन आपके लिए प्राथमिकता से दिखाया गया है।",
+
+  // Engine — card titles (new)
+  "engine.windSpeed": "हवा की गति",
+  "engine.temperature": "तापमान",
+  "engine.waterTemp": "जल तापमान",
+  "engine.travelAlerts": "यात्रा मौसम चेतावनी",
+  "engine.rainAlert": "बारिश चेतावनी",
+  "engine.weatherWarnings": "मौसम चेतावनी",
+  "engine.seasonalPlanting": "मौसमी रोपण मार्गदर्शन",
+  "engine.fogAlert": "कोहरा चेतावनी",
+  "engine.stormAlert": "तूफान चेतावनी",
+  "engine.trafficAdvisory": "ट्रैफ़िक सलाह",
+  "engine.extendedForecast": "विस्तृत पूर्वानुमान",
+  "engine.rainProbability": "बारिश की संभावना",
+
+  // Engine — fitness (new)
+  "engine.fitness.windMeaning": "आपकी बाहरी गतिविधि के लिए हवा की स्थिति।",
+  "engine.fitness.windRec": "बाहरी प्रशिक्षण के लिए स्थिति उपयुक्त है।",
+  "engine.fitness.windRecHigh": "तेज हवा — आश्रयित मार्गों पर विचार करें।",
+  "engine.fitness.tempMeaning": "वर्तमान तापमान और महसूस होने वाला तापमान।",
+  "engine.fitness.tempRecHot": "अच्छी तरह जलयुक्त रहें और तेज धूप के समय से बचें।",
+  "engine.fitness.tempRecNormal": "बाहरी गतिविधि के लिए आरामदायक तापमान।",
+  "engine.fitness.heatMeaningNormal": "तापमान और UV आरामदायक सीमा के भीतर हैं।",
+  "engine.fitness.heatRecNormal": "सामान्य बाहरी गतिविधि ठीक है।",
+
+  // Engine — health (new)
+  "engine.health.pollenRecLow": "पराग कम है — अधिकांश लोगों के लिए कोई चिंता नहीं।",
+  "engine.health.uvMeaningLow": "UV कम है — न्यूनतम सूर्य सुरक्षा आवश्यक।",
+  "engine.health.uvRecLow": "किसी विशेष सूर्य सुरक्षा की आवश्यकता नहीं।",
+
+  // Engine — beach (new)
+  "engine.beach.waterTempMeaning": "तैराकी और जल गतिविधियों के लिए जल तापमान।",
+  "engine.beach.waterTempRecWarm": "जल गतिविधियों के लिए आरामदायक।",
+  "engine.beach.waterTempRecCool": "पानी ठंडा है — वेटसूट की आवश्यकता हो सकती है।",
+  "engine.beach.waterTempRecNA": "इस अंतर्स्थलीय स्थान के लिए जल तापमान डेटा अनुपलब्ध।",
+
+  // Engine — travel (new)
+  "engine.travel.alertsMeaning": "मौसम चेतावनी जो आपकी यात्रा योजनाओं को प्रभावित कर सकती हैं।",
+  "engine.travel.alertsNone": "इस स्थान के लिए कोई सक्रिय मौसम चेतावनी नहीं।",
+  "engine.travel.alertsActive": "{n} सक्रिय चेतावनी — यात्रा से पहले जांचें।",
+
+  // Engine — family (new)
+  "engine.family.rainAlertMeaning": "आपके परिवार की बाहरी योजनाओं के लिए बारिश संभावना।",
+  "engine.family.rainAlertHigh": "बारिश संभव — इंडोर विकल्प योजना बनाएं।",
+  "engine.family.rainAlertLow": "बारिश की संभावना कम — बाहरी योजनाएं ठीक लग रही हैं।",
+  "engine.family.warningsMeaning": "आपके क्षेत्र के लिए सक्रिय मौसम चेतावनी।",
+  "engine.family.warningsNone": "कोई मौसम चेतावनी सक्रिय नहीं। स्थिति सुरक्षित है।",
+  "engine.family.warningsActive": "{n} सक्रिय चेतावनी — सावधानी बरतें।",
+  "engine.family.uvMeaningNormal": "बच्चों के लिए UV स्तर मध्यम है।",
+  "engine.family.uvRecNormal": "मानक सूर्य सुरक्षा पर्याप्त है।",
+
+  // Engine — garden (new)
+  "engine.garden.frostNone": "पाला जोखिम नहीं — पौधे सुरक्षित हैं।",
+  "engine.garden.frostNoneMeaning": "आपके क्षेत्र में पाला जोखिम वर्तमान में कम है।",
+  "engine.garden.seasonalMeaning": "वर्तमान मौसम स्थितियों पर आधारित रोपण मार्गदर्शन।",
+  "engine.garden.seasonalRecWet": "गीली स्थिति — आज बीज बोने से बचें। स्थापित पौधों को स्थानांतरित करने का अच्छा समय।",
+  "engine.garden.seasonalRecDry": "सूखी स्थिति — नए बोए गए बीजों को नियमित रूप से पानी दें। बोने का अच्छा समय।",
+  "engine.garden.seasonalRecHot": "गर्म और सूखा — युवा पौधों को छाया दें और सुबह या शाम जल्दी पानी दें।",
+  "engine.garden.seasonalRecNormal": "सामान्य रोपण और बगीचे रखरखाव के लिए अनुकूल स्थिति।",
+
+  // Engine — commute (new)
+  "engine.commute.visibilityMeaning": "आपके आवागमन के लिए वर्तमान दृश्यता।",
+  "engine.commute.visibilityGood": "अच्छी दृश्यता — सामान्य ड्राइविंग स्थिति।",
+  "engine.commute.visibilityModerate": "मध्यम दृश्यता — सतर्क रहें।",
+  "engine.commute.fogMeaning": "वर्तमान स्थितियों के आधार पर कोहरा जोखिम।",
+  "engine.commute.fogRisk": "कोहरा संभव — धीरे चलाएं और फॉग लाइट उपयोग करें।",
+  "engine.commute.fogNoRisk": "कोहरा जोखिम नहीं — साफ सड़कें अपेक्षित।",
+  "engine.commute.stormMeaning": "आपके आवागमन मार्ग के लिए तूफान चेतावनी।",
+  "engine.commute.stormNone": "आपके क्षेत्र के लिए कोई तूफान चेतावनी सक्रिय नहीं।",
+  "engine.commute.stormActive": "तूफान चेतावनी सक्रिय — गैर-ज़रूरी यात्रा स्थगित करने पर विचार करें।",
+  "engine.commute.trafficMeaning": "वर्तमान मौसम पर आधारित ट्रैफ़िक सलाह (डेमो)।",
+  "engine.commute.trafficNormal": "मौसम स्थितियों से ट्रैफ़िक पर ज़्यादा प्रभाव नहीं पड़ना चाहिए।",
+  "engine.commute.trafficRain": "बारिश के कारण कुछ मार्गों पर ट्रैफ़िक धीमा और जलभराव हो सकता है।",
+  "engine.commute.trafficFog": "कम दृश्यता के कारण ट्रैफ़िक में देरी हो सकती है।",
+  "engine.commute.trafficDemo": "डेमो सलाह — लाइव ट्रैफ़िक डेटा जुड़ा नहीं है।",
+
+  // Engine — events (new)
+  "engine.events.forecastMeaning": "कार्यक्रम नियोजन के लिए 7-दिन विस्तृत पूर्वानुमान।",
+  "engine.events.rainProbMeaning": "आपके बाहरी कार्यक्रम के लिए बारिश संभावना।",
+  "engine.events.rainProbRec": "बारिश संभव — बैकअप योजना पर विचार करें।",
+  "engine.events.rainProbLow": "बारिश की संभावना कम — बाहरी कार्यक्रमों के लिए अच्छा।",
+
+  // Engine — reasons (new)
+  "reason.fitness.wind": "फिटनेस चालू है। हवा की गति {wind} किमी/घं है, बाहरी प्रशिक्षण के लिए प्रासंगिक।",
+  "reason.fitness.temp": "फिटनेस चालू है। तापमान {temp}° (महसूस {feels}°) है, बाहरी गतिविधि योजना के लिए महत्वपूर्ण।",
+  "reason.beach.waterTemp": "बीच चालू है। जल तापमान {temp}° है।",
+  "reason.travel.alerts": "यात्रा चालू है। सक्रिय मौसम चेतावनी आपकी यात्रा योजनाओं को प्रभावित कर सकती हैं।",
+  "reason.family.rain": "परिवार चालू है। बारिश संभावना {rain}% है।",
+  "reason.family.warnings": "परिवार चालू है। सक्रिय मौसम चेतावनी: {n}।",
+  "reason.garden.seasonal": "बगीचा चालू है। रोपण मार्गदर्शन बारिश, तापमान और मिट्टी नमी से तैयार किया गया है।",
+  "reason.commute.visibility": "आवागमन चालू है। दृश्यता {vis} किमी है।",
+  "reason.commute.fog": "आवागमन चालू है। कोहरा जोखिम दृश्यता और स्थितियों से आकलित।",
+  "reason.commute.storm": "आवागमन चालू है। तूफान चेतावनी: {n}।",
+  "reason.commute.traffic": "आवागमन चालू है। ट्रैफ़िक सलाह वर्तमान मौसम स्थितियों से तैयार (डेमो)।",
+  "reason.events.forecast": "कार्यक्रम चालू है। नियोजन के लिए विस्तृत 7-दिन पूर्वानुमान।",
+  "reason.events.rainProb": "कार्यक्रम चालू है। बारिश संभावना {rain}% है।",
 };
 
 export const translations: Record<Language, Dict> = { en, hi };

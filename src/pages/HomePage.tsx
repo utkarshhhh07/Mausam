@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronRight,
-  ChevronDown,
   Sparkles,
   CalendarClock,
   Bell,
@@ -40,13 +39,11 @@ export function HomePage() {
   const navigate = useNavigate();
   const { t, lang } = useTranslation();
   const [yourDayOpen, setYourDayOpen] = useState(false);
-  const [showAll, setShowAll] = useState(false);
   const [locSheetOpen, setLocSheetOpen] = useState(false);
 
   const [loading, setLoading] = useState(false);
   useMemo(() => {
     setLoading(true);
-    setShowAll(false);
     const timer = setTimeout(() => setLoading(false), 300);
     return () => clearTimeout(timer);
   }, [location.id]);
@@ -59,8 +56,7 @@ export function HomePage() {
     () => getPersonalizedCards(prefs, weather, alerts),
     [prefs, weather, alerts],
   );
-  const cards = showAll ? allCards : allCards.slice(0, 5);
-  const hiddenCount = Math.max(0, allCards.length - 5);
+  const cards = allCards;
   const yourDay = useMemo(
     () => getYourDayRecommendation(prefs, weather, alerts),
     [prefs, weather, alerts],
@@ -238,24 +234,6 @@ export function HomePage() {
             {cards.map((card: PersonalizedCard) => (
               <PersonalizedCardItem key={card.id} card={card} />
             ))}
-            {hiddenCount > 0 && !showAll && (
-              <button
-                onClick={() => setShowAll(true)}
-                className="flex w-full items-center justify-center gap-1.5 rounded-2xl bg-white p-3 text-sm font-semibold text-brand-600 ring-1 ring-slate-100 transition active:scale-[0.99]"
-              >
-                <ChevronDown size={16} />
-                {t("home.viewAllAdvisories")} ·{" "}
-                {t("home.moreAdvisories", { n: String(hiddenCount) })}
-              </button>
-            )}
-            {showAll && hiddenCount > 0 && (
-              <button
-                onClick={() => setShowAll(false)}
-                className="flex w-full items-center justify-center gap-1.5 rounded-2xl bg-white p-3 text-sm font-semibold text-slate-500 ring-1 ring-slate-100 transition active:scale-[0.99]"
-              >
-                {t("common.close")}
-              </button>
-            )}
           </div>
         )}
       </section>
