@@ -24,6 +24,7 @@ export const CONDITION_LABEL: Record<WeatherCondition, string> = {
   thunderstorm: "Thunderstorm",
   fog: "Fog",
   "clear-night": "Clear Night",
+  snow: "Snow",
 };
 
 export const CONDITION_EMOJI: Record<WeatherCondition, string> = {
@@ -35,6 +36,7 @@ export const CONDITION_EMOJI: Record<WeatherCondition, string> = {
   thunderstorm: "⛈️",
   fog: "🌫️",
   "clear-night": "🌙",
+  snow: "❄️",
 };
 
 export function conditionEmoji(c: WeatherCondition): string {

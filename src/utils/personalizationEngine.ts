@@ -40,18 +40,23 @@ export function getPersonalizedCards(
     const bestWindow = findBestRunningWindow(weather);
     if (bestWindow) {
       const highRain = weather.rainProbability >= 80 || bestWindow.rainRisk;
+      const hasSnow = weather.snowfall > 0 || weather.condition === "snow";
       cards.push({
         id: "fitness-running-window",
         persona: "fitness",
         title: t("engine.bestRunningWindow", language),
-        emoji: "🏃",
+        emoji: hasSnow ? "🎿" : "🏃",
         value: `${bestWindow.start} – ${bestWindow.end}`,
-        meaning: t("engine.fitness.meaning", language),
-        recommendation: highRain
+        meaning: hasSnow
+          ? t("engine.fitness.snowMeaning", language)
+          : t("engine.fitness.meaning", language),
+        recommendation: hasSnow
           ? t("engine.fitness.recIndoor", language)
-          : bestWindow.rainRisk
-            ? t("engine.fitness.recRain", language)
-            : t("engine.fitness.recGood", language),
+          : highRain
+            ? t("engine.fitness.recIndoor", language)
+            : bestWindow.rainRisk
+              ? t("engine.fitness.recRain", language)
+              : t("engine.fitness.recGood", language),
         updatedAt: ts(weather, language),
         source: weather.source,
         reason: t("reason.fitness.window", language, { end: bestWindow.end }),
@@ -160,33 +165,35 @@ export function getPersonalizedCards(
       priority: 75,
     });
 
-    // Pollen — always shown (was conditional on pollen !== "low")
-    const pollen = weather.airQuality.pollen;
-    const pollenMeaning =
-      pollen === "high"
-        ? t("engine.health.pollenMeaning", language)
-        : pollen === "moderate"
+    // Pollen — only shown when data is available (pollenAvailable flag)
+    if (weather.airQuality.pollenAvailable) {
+      const pollen = weather.airQuality.pollen;
+      const pollenMeaning =
+        pollen === "high"
           ? t("engine.health.pollenMeaning", language)
-          : t("engine.health.pollenRecLow", language);
-    const pollenRec =
-      pollen === "high"
-        ? t("engine.health.pollenRecHigh", language)
-        : pollen === "moderate"
-          ? t("engine.health.pollenRecMod", language)
-          : t("engine.health.pollenRecLow", language);
-    cards.push({
-      id: "health-pollen",
-      persona: "health",
-      title: t("engine.pollen", language),
-      emoji: "🌸",
-      value: `${t("engine.pollen", language)}: ${pollen}`,
-      meaning: pollenMeaning,
-      recommendation: pollenRec,
-      updatedAt: ts(weather, language),
-      source: weather.airQuality.source,
-      reason: t("reason.health.pollen", language, { level: pollen }),
-      priority: 55,
-    });
+          : pollen === "moderate"
+            ? t("engine.health.pollenMeaning", language)
+            : t("engine.health.pollenRecLow", language);
+      const pollenRec =
+        pollen === "high"
+          ? t("engine.health.pollenRecHigh", language)
+          : pollen === "moderate"
+            ? t("engine.health.pollenRecMod", language)
+            : t("engine.health.pollenRecLow", language);
+      cards.push({
+        id: "health-pollen",
+        persona: "health",
+        title: t("engine.pollen", language),
+        emoji: "🌸",
+        value: `${t("engine.pollen", language)}: ${pollen}`,
+        meaning: pollenMeaning,
+        recommendation: pollenRec,
+        updatedAt: ts(weather, language),
+        source: weather.airQuality.source,
+        reason: t("reason.health.pollen", language, { level: pollen }),
+        priority: 55,
+      });
+    }
 
     // Humidity — always shown as a health card
     const humidHigh = weather.humidity > 80;
@@ -301,9 +308,11 @@ export function getPersonalizedCards(
       persona: "commute",
       title: t("engine.commuteConditions", language),
       emoji: "🚗",
-      value: `${t("weather.rain", language)} ${commuteRain}% · 8 AM / 6 PM`,
-      meaning,
-      recommendation: rec,
+      value: weather.snowfall > 0
+        ? `${t("engine.snowExpected", language)} · ${weather.snowfall} cm`
+        : `${t("weather.rain", language)} ${commuteRain}% · 8 AM / 6 PM`,
+      meaning: weather.snowfall > 0 ? t("engine.snowExpected", language) : meaning,
+      recommendation: weather.snowfall > 0 ? t("engine.commute.snowRec", language) : rec,
       updatedAt: ts(weather, language),
       source: weather.source,
       reason: t("reason.commute", language, { rain: String(commuteRain) }),
@@ -421,13 +430,19 @@ export function getPersonalizedCards(
     cards.push({
       id: "family-rain",
       persona: "family",
-      title: t("engine.rainAlert", language),
-      emoji: "🌧️",
-      value: `${t("weather.rain", language)} ${weather.rainProbability}%`,
-      meaning: t("engine.family.rainAlertMeaning", language),
-      recommendation: weather.rainProbability > 50
-        ? t("engine.family.rainAlertHigh", language)
-        : t("engine.family.rainAlertLow", language),
+      title: weather.snowfall > 0 ? t("engine.snowAlert", language) : t("engine.rainAlert", language),
+      emoji: weather.snowfall > 0 ? "❄️" : "🌧️",
+      value: weather.snowfall > 0
+        ? `${t("engine.snowExpected", language)} · ${weather.snowfall} cm`
+        : `${t("weather.rain", language)} ${weather.rainProbability}%`,
+      meaning: weather.snowfall > 0
+        ? t("engine.family.snowAlertMeaning", language)
+        : t("engine.family.rainAlertMeaning", language),
+      recommendation: weather.snowfall > 0
+        ? t("engine.family.snowAlertRec", language)
+        : weather.rainProbability > 50
+          ? t("engine.family.rainAlertHigh", language)
+          : t("engine.family.rainAlertLow", language),
       updatedAt: ts(weather, language),
       source: weather.source,
       reason: t("reason.family.rain", language, { rain: String(weather.rainProbability) }),
@@ -548,7 +563,7 @@ export function getPersonalizedCards(
   // ──────────────────────────────────────────────
   // BEACH  (Tide, Sea, Waves, Water Temp)
   // ──────────────────────────────────────────────
-  if (has("beach")) {
+  if (has("beach") && weather.marine.available) {
     const m = weather.marine;
     const unsuitable = m.waveHeight >= 1.5;
     cards.push({
@@ -713,13 +728,19 @@ export function getPersonalizedCards(
     cards.push({
       id: "events-rain",
       persona: "events",
-      title: t("engine.rainProbability", language),
-      emoji: "🌧️",
-      value: `${weather.rainProbability}%`,
-      meaning: t("engine.events.rainProbMeaning", language),
-      recommendation: rainHigh
-        ? t("engine.events.rainProbRec", language)
-        : t("engine.events.rainProbLow", language),
+      title: weather.snowfall > 0 ? t("engine.snowProbability", language) : t("engine.rainProbability", language),
+      emoji: weather.snowfall > 0 ? "❄️" : "🌧️",
+      value: weather.snowfall > 0
+        ? `${weather.snowfall} cm`
+        : `${weather.rainProbability}%`,
+      meaning: weather.snowfall > 0
+        ? t("engine.events.snowProbMeaning", language)
+        : t("engine.events.rainProbMeaning", language),
+      recommendation: weather.snowfall > 0
+        ? t("engine.events.snowProbRec", language)
+        : rainHigh
+          ? t("engine.events.rainProbRec", language)
+          : t("engine.events.rainProbLow", language),
       updatedAt: ts(weather, language),
       source: weather.source,
       reason: t("reason.events.rainProb", language, { rain: String(weather.rainProbability) }),

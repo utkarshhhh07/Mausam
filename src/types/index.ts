@@ -36,9 +36,11 @@ export interface HourlyPoint {
   feelsLike: number;
   condition: WeatherCondition;
   rainProbability: number;
+  snowfall: number; // cm
   humidity: number;
   wind: number;
   uv: number;
+  visibility: number; // km
 }
 
 export interface DailyPoint {
@@ -48,6 +50,8 @@ export interface DailyPoint {
   low: number;
   condition: WeatherCondition;
   rainProbability: number;
+  snowfall: number; // cm
+  snowDepth: number; // cm
 }
 
 export type WeatherCondition =
@@ -58,7 +62,8 @@ export type WeatherCondition =
   | "heavy-rain"
   | "thunderstorm"
   | "fog"
-  | "clear-night";
+  | "clear-night"
+  | "snow";
 
 export interface AirQuality {
   aqi: number;
@@ -66,17 +71,27 @@ export interface AirQuality {
   pm25: number;
   pm10: number;
   pollen: "low" | "moderate" | "high";
+  pollenAvailable: boolean;
   source: string;
 }
 
 export interface MarineData {
   waveHeight: number; // metres
-  wind: number;
+  wavePeriod: number; // seconds
+  waveDirection: string;
+  swellHeight: number; // metres
+  swellPeriod: number; // seconds
+  swellDirection: string;
+  seaLevelHeight: number; // metres
   waterTemp: number;
+  oceanCurrentVelocity: number; // m/s
+  oceanCurrentDirection: string;
+  wind: number;
   tideHigh: string;
   tideLow: string;
   seaCondition: string;
   source: string;
+  available: boolean; // false for inland locations
 }
 
 export interface WeatherData {
@@ -89,6 +104,9 @@ export interface WeatherData {
   wind: number;
   windDirection: string;
   rainProbability: number;
+  precipitation: number; // mm
+  snowfall: number; // cm
+  snowDepth: number; // cm
   uv: number;
   uvCategory: string;
   visibility: number;
@@ -99,9 +117,11 @@ export interface WeatherData {
   marine: MarineData;
   hourly: HourlyPoint[];
   daily: DailyPoint[];
-  soilMoisture: number; // demo %
+  soilMoisture: number; // %
+  soilTemperature: number; // °C
   frostRisk: "none" | "low" | "moderate";
   source: string;
+  isLive: boolean;
 }
 
 export interface LocationInfo {
@@ -111,6 +131,7 @@ export interface LocationInfo {
   country: string;
   lat: number;
   lon: number;
+  coastal: boolean;
 }
 
 export type HealthSensitivity =

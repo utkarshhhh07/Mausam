@@ -16,7 +16,7 @@ import {
   Info,
 } from "lucide-react";
 import { useApp } from "@/context/AppContext";
-import { getWeather } from "@/data/weather";
+import { useWeather } from "@/hooks/useWeather";
 import { getAlertsForLocation } from "@/data/alerts";
 import {
   getPersonalizedCards,
@@ -32,7 +32,8 @@ import { BottomSheet } from "@/components/BottomSheet";
 import { LocationSwitcher } from "@/components/LocationSwitcher";
 import { useTranslation } from "@/hooks/useTranslation";
 import { translate } from "@/i18n/translations";
-import type { PersonalizedCard } from "@/types";
+import { getWeather } from "@/data/weather";
+import type { PersonalizedCard, WeatherData } from "@/types";
 
 export function HomePage() {
   const { location, prefs } = useApp();
@@ -41,14 +42,10 @@ export function HomePage() {
   const [yourDayOpen, setYourDayOpen] = useState(false);
   const [locSheetOpen, setLocSheetOpen] = useState(false);
 
-  const [loading, setLoading] = useState(false);
-  useMemo(() => {
-    setLoading(true);
-    const timer = setTimeout(() => setLoading(false), 300);
-    return () => clearTimeout(timer);
-  }, [location.id]);
+  const { weather: liveWeather, loading: weatherLoading, error: weatherError } = useWeather(location.id);
 
-  const weather = useMemo(() => getWeather(location.id), [location.id]);
+  const loading = weatherLoading;
+  const weather: WeatherData = liveWeather ?? getWeather(location.id);
   const alerts = useMemo(() => getAlertsForLocation(location.id), [location.id]);
   const criticalAlert = alerts.find((a) => a.severity === "red" || a.severity === "orange");
   const otherAlerts = alerts.filter((a) => a !== criticalAlert);

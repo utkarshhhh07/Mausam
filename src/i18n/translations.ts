@@ -44,7 +44,7 @@ const en: Dict = {
   "cond.heavy-rain": "Heavy Rain",
   "cond.thunderstorm": "Thunderstorm",
   "cond.fog": "Fog",
-  "cond.clear-night": "Clear Night",
+  "cond.snow": "Snow",
 
   // Greetings
   "greeting.morning": "Good Morning",
@@ -480,6 +480,17 @@ const en: Dict = {
   "reason.commute.traffic": "Commute is on. Traffic advisory is derived from current weather conditions (demo).",
   "reason.events.forecast": "Events is on. Extended 7-day forecast for planning.",
   "reason.events.rainProb": "Events is on. Rain probability is {rain}%.",
+
+  // Snow keys
+  "engine.snowExpected": "Snow expected",
+  "engine.snowAlert": "Snow Alert",
+  "engine.snowProbability": "Snow Probability",
+  "engine.fitness.snowMeaning": "Snow conditions — outdoor running not recommended.",
+  "engine.commute.snowRec": "Snow may affect roads — drive carefully and allow extra time.",
+  "engine.family.snowAlertMeaning": "Snow expected — take precautions for children's outdoor activities.",
+  "engine.family.snowAlertRec": "Dress children warmly and limit outdoor exposure.",
+  "engine.events.snowProbMeaning": "Snow expected for your outdoor event.",
+  "engine.events.snowProbRec": "Snow may disrupt outdoor events — consider indoor alternatives.",
 };
 
 const hi: Dict = {
@@ -524,7 +535,7 @@ const hi: Dict = {
   "cond.heavy-rain": "भारी बारिश",
   "cond.thunderstorm": "गरज बादल",
   "cond.fog": "कोहरा",
-  "cond.clear-night": "साफ रात",
+  "cond.snow": "बर्फ़",
 
   // Greetings
   "greeting.morning": "सुप्रभात",
@@ -960,6 +971,17 @@ const hi: Dict = {
   "reason.commute.traffic": "आवागमन चालू है। ट्रैफ़िक सलाह वर्तमान मौसम स्थितियों से तैयार (डेमो)।",
   "reason.events.forecast": "कार्यक्रम चालू है। नियोजन के लिए विस्तृत 7-दिन पूर्वानुमान।",
   "reason.events.rainProb": "कार्यक्रम चालू है। बारिश संभावना {rain}% है।",
+
+  // Snow keys
+  "engine.snowExpected": "बर्फ़ की संभावना",
+  "engine.snowAlert": "बर्फ़ चेतावनी",
+  "engine.snowProbability": "बर्फ़ संभावना",
+  "engine.fitness.snowMeaning": "बर्फ़ की स्थिति — बाहर दौड़ना अनुशंसित नहीं।",
+  "engine.commute.snowRec": "बर्फ़ सड़कों को प्रभावित कर सकती है — धीरे चलाएं और अतिरिक्त समय रखें।",
+  "engine.family.snowAlertMeaning": "बर्फ़ की संभावना — बच्चों की बाहरी गतिविधियों के लिए सावधानी बरतें।",
+  "engine.family.snowAlertRec": "बच्चों को गर्म कपड़े पहनाएं और बाहरी अनावरण सीमित रखें।",
+  "engine.events.snowProbMeaning": "आपके बाहरी कार्यक्रम के लिए बर्फ़ की संभावना।",
+  "engine.events.snowProbRec": "बर्फ़ बाहरी कार्यक्रमों को बाधित कर सकती है — इंडोर विकल्प पर विचार करें।",
 };
 
 export const translations: Record<Language, Dict> = { en, hi };
