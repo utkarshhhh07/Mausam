@@ -30,9 +30,11 @@ export function WeatherHeader({ weather }: { weather: WeatherData }) {
           </div>
         </div>
 
-        <div className="mt-4 grid grid-cols-4 gap-2 text-center">
+        <div className={`mt-4 grid gap-2 text-center ${prefs.personas.includes("health") ? "grid-cols-4" : "grid-cols-3"}`}>
           <Stat icon={<Thermometer size={16} />} label={t("weather.feels")} value={formatTemp(weather.feelsLike, prefs.units)} />
-          <Stat icon={<Droplets size={16} />} label={t("weather.humidity")} value={`${weather.humidity}%`} />
+          {prefs.personas.includes("health") && (
+            <Stat icon={<Droplets size={16} />} label={t("weather.humidity")} value={`${weather.humidity}%`} />
+          )}
           <Stat icon={<Wind size={16} />} label={t("weather.wind")} value={formatWind(weather.wind, prefs.units)} />
           <Stat icon={<Eye size={16} />} label={t("weather.rain")} value={`${weather.rainProbability}%`} />
         </div>

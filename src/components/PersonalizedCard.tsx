@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HelpCircle, ThumbsUp, Meh, ThumbsDown } from "lucide-react";
+import { HelpCircle, ThumbsUp, ThumbsDown } from "lucide-react";
 import type { PersonalizedCard } from "@/types";
 import { BottomSheet } from "./BottomSheet";
 import { useCardFeedback } from "@/hooks/useCardFeedback";
@@ -139,13 +139,6 @@ function FeedbackControls({
         aria-label={t("feedback.useful")}
       >
         <ThumbsUp size={15} />
-      </button>
-      <button
-        onClick={() => onSubmit("okay")}
-        className="rounded-full p-1.5 text-slate-400 transition hover:bg-amber-50 hover:text-amber-600"
-        aria-label={t("feedback.okay")}
-      >
-        <Meh size={15} />
       </button>
       <button
         onClick={onOpenTags}

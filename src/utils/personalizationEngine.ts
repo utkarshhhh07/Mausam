@@ -773,30 +773,6 @@ export function getPersonalizedCards(
     });
   }
 
-  // ──────────────────────────────────────────────
-  // GENERAL (always — humidity for non-health users)
-  // ──────────────────────────────────────────────
-  if (!has("health")) {
-    const humidHigh = weather.humidity > 80;
-    cards.push({
-      id: "general-humidity",
-      persona: "general",
-      title: t("engine.humidity", language),
-      emoji: "💧",
-      value: `${weather.humidity}%`,
-      meaning: humidHigh
-        ? t("engine.general.humidHigh", language)
-        : t("engine.general.humidOk", language),
-      recommendation: humidHigh
-        ? t("engine.general.humidRec", language)
-        : t("engine.general.humidNormal", language),
-      updatedAt: ts(weather, language),
-      source: weather.source,
-      reason: t("reason.general", language),
-      priority: 30,
-    });
-  }
-
   cards.sort((a, b) => b.priority - a.priority);
   return cards;
 }
