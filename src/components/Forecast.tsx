@@ -52,6 +52,37 @@ export function DailyForecast({ weather }: { weather: WeatherData }) {
   );
 }
 
+export function DailyForecastWithSun({ weather }: { weather: WeatherData }) {
+  const { prefs } = useApp();
+  const { t } = useTranslation();
+  return (
+    <div className="space-y-2">
+      {weather.daily.map((d, i) => (
+        <div
+          key={i}
+          className="flex items-center justify-between rounded-2xl bg-white p-3 ring-1 ring-slate-100"
+        >
+          <div className="w-20">
+            <div className="text-sm font-semibold text-slate-900">
+              {i === 0 ? t("forecast.today") : d.day}
+            </div>
+            <div className="text-xs text-slate-400">{d.dateLabel}</div>
+            <div className="mt-0.5 text-[10px] text-slate-400">
+              {d.sunrise} – {d.sunset}
+            </div>
+          </div>
+          <span className="text-2xl">{conditionEmoji(d.condition)}</span>
+          <div className="text-xs text-sky-600">{d.rainProbability}%</div>
+          <div className="flex items-center gap-2 text-sm">
+            <span className="font-semibold text-slate-900">{formatTemp(d.high, prefs.units)}</span>
+            <span className="text-slate-400">{formatTemp(d.low, prefs.units)}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function MiniBarChart({ weather }: { weather: WeatherData }) {
   const { t } = useTranslation();
   const hours = weather.hourly.slice(6, 22);

@@ -1,17 +1,20 @@
 import { useMemo, useState } from "react";
 import { useApp } from "@/context/AppContext";
+import { useWeather } from "@/hooks/useWeather";
 import { getWeather } from "@/data/weather";
 import { TopBar } from "@/components/TopBar";
-import { HourlyForecast, DailyForecast, MiniBarChart } from "@/components/Forecast";
+import { HourlyForecast, DailyForecastWithSun as DailyForecast, MiniBarChart } from "@/components/Forecast";
 import { Sun, Droplets, Wind, Eye, Gauge, Sunrise, Sunset } from "lucide-react";
 import { formatTemp, formatWind } from "@/utils/weatherDisplay";
 import { useTranslation } from "@/hooks/useTranslation";
+import type { WeatherData } from "@/types";
 
 type Tab = "today" | "tomorrow" | "week";
 
 export function ForecastPage() {
   const { location, prefs } = useApp();
-  const weather = useMemo(() => getWeather(location.id), [location.id]);
+  const { weather: liveWeather } = useWeather(location.id);
+  const weather: WeatherData = liveWeather ?? getWeather(location.id);
   const [tab, setTab] = useState<Tab>("today");
   const { t } = useTranslation();
 
@@ -98,7 +101,7 @@ export function ForecastPage() {
   );
 }
 
-function DetailGrid({ weather }: { weather: ReturnType<typeof getWeather> }) {
+function DetailGrid({ weather }: { weather: WeatherData }) {
   const { prefs } = useApp();
   const { t } = useTranslation();
   const items = [
@@ -126,7 +129,7 @@ function DetailGrid({ weather }: { weather: ReturnType<typeof getWeather> }) {
   );
 }
 
-function TomorrowCard({ weather }: { weather: ReturnType<typeof getWeather> }) {
+function TomorrowCard({ weather }: { weather: WeatherData }) {
   const { prefs } = useApp();
   const { t } = useTranslation();
   const tm = weather.daily[1];
@@ -141,6 +144,10 @@ function TomorrowCard({ weather }: { weather: ReturnType<typeof getWeather> }) {
       </div>
       <div className="mt-1 text-sm text-slate-500">
         {t(`cond.${tm.condition}`)} · {t("weather.rain")} {tm.rainProbability}%
+      </div>
+      <div className="mt-2 flex items-center gap-4 text-xs text-slate-400">
+        <span className="inline-flex items-center gap-1"><Sunrise size={13} /> {tm.sunrise}</span>
+        <span className="inline-flex items-center gap-1"><Sunset size={13} /> {tm.sunset}</span>
       </div>
     </div>
   );

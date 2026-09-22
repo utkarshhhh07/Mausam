@@ -50,6 +50,8 @@ const baseDaily = (high: number, low: number, rainMid: number): DailyPoint[] => 
     rainProbability: i === 3 || i === 4 ? rainMid : i === 2 ? rainMid / 2 : 10,
     snowfall: 0,
     snowDepth: 0,
+    sunrise: "06:10",
+    sunset: "18:40",
   }));
 };
 

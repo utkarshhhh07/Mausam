@@ -309,6 +309,8 @@ function normalizeWeatherData(
         rainProbability: Math.round(omDaily.precipitation_probability_max?.[i] ?? 0),
         snowfall: Math.round((omDaily.snowfall?.[i] ?? 0) * 10) / 10,
         snowDepth: 0,
+        sunrise: omDaily.sunrise?.[i] ? timeFromIso(omDaily.sunrise[i]) : mock.sunrise,
+        sunset: omDaily.sunset?.[i] ? timeFromIso(omDaily.sunset[i]) : mock.sunset,
       });
     }
   }

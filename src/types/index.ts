@@ -52,6 +52,8 @@ export interface DailyPoint {
   rainProbability: number;
   snowfall: number; // cm
   snowDepth: number; // cm
+  sunrise: string;
+  sunset: string;
 }
 
 export type WeatherCondition =
