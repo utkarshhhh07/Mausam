@@ -59,7 +59,7 @@ export function getPersonalizedCards(
               : t("engine.fitness.recGood", language),
         updatedAt: ts(weather, language),
         source: weather.source,
-        reason: t("reason.fitness.window", language, { end: bestWindow.end }),
+        reason: t("reason.fitness.window", language, { end: bestWindow.end, start: bestWindow.start, temp: String(bestWindow.temp), wind: String(weather.wind), rain: String(bestWindow.rainRisk ? bestWindow.rainRisk : 0) }),
         priority: highRain ? 92 : 90,
         meta: { temp: `${bestWindow.temp}°`, uv: `UV ${bestWindow.uv}` },
       });
@@ -81,7 +81,7 @@ export function getPersonalizedCards(
         : t("engine.fitness.heatRecNormal", language),
       updatedAt: ts(weather, language),
       source: weather.source,
-      reason: t("reason.fitness.heat", language, { uv: String(weather.uv), category: weather.uvCategory }),
+      reason: t("reason.fitness.heat", language, { uv: String(weather.uv), category: weather.uvCategory, temp: String(weather.temp), feels: String(weather.feelsLike) }),
       priority: 70,
     });
 
@@ -99,7 +99,7 @@ export function getPersonalizedCards(
         : t("engine.fitness.windRec", language),
       updatedAt: ts(weather, language),
       source: weather.source,
-      reason: t("reason.fitness.wind", language, { wind: String(weather.wind) }),
+      reason: t("reason.fitness.wind", language, { wind: String(weather.wind), dir: weather.windDirection }),
       priority: 58,
     });
 
@@ -114,7 +114,7 @@ export function getPersonalizedCards(
       recommendation: t("engine.fitness.sunRec", language),
       updatedAt: ts(weather, language),
       source: weather.source,
-      reason: t("reason.fitness.sun", language),
+      reason: t("reason.fitness.sun", language, { sunrise: weather.sunrise, sunset: weather.sunset }),
       priority: 40,
     });
   }
@@ -138,7 +138,7 @@ export function getPersonalizedCards(
         : t("engine.health.aqiRecOk", language),
       updatedAt: ts(weather, language),
       source: weather.airQuality.source,
-      reason: t("reason.health.aqi", language, { aqi: String(weather.airQuality.aqi) }),
+      reason: t("reason.health.aqi", language, { aqi: String(weather.airQuality.aqi), category: weather.airQuality.category }),
       priority: 80,
     });
 
@@ -161,7 +161,7 @@ export function getPersonalizedCards(
           : t("engine.health.uvRecMod", language),
       updatedAt: ts(weather, language),
       source: weather.source,
-      reason: t("reason.health.uv", language, { uv: String(weather.uv) }),
+      reason: t("reason.health.uv", language, { uv: String(weather.uv), category: weather.uvCategory }),
       priority: 75,
     });
 
@@ -211,7 +211,7 @@ export function getPersonalizedCards(
         : t("engine.general.humidNormal", language),
       updatedAt: ts(weather, language),
       source: weather.source,
-      reason: t("reason.general", language),
+      reason: t("reason.general", language, { humidity: String(weather.humidity) }),
       priority: 45,
     });
   }
@@ -315,7 +315,7 @@ export function getPersonalizedCards(
       recommendation: weather.snowfall > 0 ? t("engine.commute.snowRec", language) : rec,
       updatedAt: ts(weather, language),
       source: weather.source,
-      reason: t("reason.commute", language, { rain: String(commuteRain) }),
+      reason: t("reason.commute", language, { rain: String(commuteRain), vis: String(weather.visibility) }),
       priority: 78,
       meta: { [t("weather.visibility", language)]: `${weather.visibility} km` },
     });
@@ -354,7 +354,7 @@ export function getPersonalizedCards(
         : t("engine.commute.fogNoRisk", language),
       updatedAt: ts(weather, language),
       source: weather.source,
-      reason: t("reason.commute.fog", language),
+      reason: t("reason.commute.fog", language, { vis: String(weather.visibility) }),
       priority: 66,
     });
 
@@ -397,7 +397,7 @@ export function getPersonalizedCards(
       recommendation: `${t(trafficKey, language)} ${t("engine.commute.trafficDemo", language)}`,
       updatedAt: ts(weather, language),
       source: "Demo",
-      reason: t("reason.commute.traffic", language),
+      reason: t("reason.commute.traffic", language, { rain: String(weather.rainProbability), vis: String(weather.visibility) }),
       priority: 60,
     });
   }
@@ -487,7 +487,7 @@ export function getPersonalizedCards(
         : t("engine.family.uvRecNormal", language),
       updatedAt: ts(weather, language),
       source: weather.source,
-      reason: t("reason.family.uv", language),
+      reason: t("reason.family.uv", language, { uv: String(weather.uv), category: weather.uvCategory }),
       priority: 60,
     });
   }
@@ -499,7 +499,7 @@ export function getPersonalizedCards(
     const tomorrow = weather.daily[1];
     const rainTomorrow = tomorrow?.rainProbability ?? 0;
     const packingItems: string[] = [];
-    if (rainTomorrow > 50) packingItems.push(t("feedback.unexpectedRain", language).toLowerCase());
+    if (rainTomorrow > 50) packingItems.push("umbrella");
     if (tomorrow && tomorrow.high < 20) packingItems.push("warm layer");
     if (weather.uv >= 6) packingItems.push("sunscreen");
     const packing = packingItems.length > 0 ? packingItems.join(", ") : "light layers";
@@ -520,7 +520,7 @@ export function getPersonalizedCards(
         : t("engine.travel.alertsNone", language),
       updatedAt: ts(weather, language),
       source: weather.source,
-      reason: t("reason.travel.alerts", language),
+      reason: t("reason.travel.alerts", language, { n: String(travelAlerts.length), location: weather.locationName }),
       priority: 76,
     });
 
@@ -536,7 +536,7 @@ export function getPersonalizedCards(
       recommendation: t("engine.travel.packing", language, { items: packing }),
       updatedAt: ts(weather, language),
       source: weather.source,
-      reason: t("reason.travel", language, { location: weather.locationName, rain: String(rainTomorrow) }),
+      reason: t("reason.travel", language, { location: weather.locationName, rain: String(rainTomorrow), high: String(tomorrow?.high ?? weather.temp) }),
       priority: 72,
       meta: {
         forecast: tomorrow ? `${tomorrow.high}°/${tomorrow.low}°` : "—",
@@ -594,7 +594,7 @@ export function getPersonalizedCards(
       recommendation: t("engine.beach.tideRec", language),
       updatedAt: ts(weather, language),
       source: m.source,
-      reason: t("reason.beach.tide", language),
+      reason: t("reason.beach.tide", language, { highTide: m.tideHigh, lowTide: m.tideLow }),
       priority: 52,
     });
 
@@ -640,7 +640,7 @@ export function getPersonalizedCards(
         : t("engine.garden.dryRec", language),
       updatedAt: ts(weather, language),
       source: weather.source,
-      reason: t("reason.garden", language, { rain: String(weather.rainProbability) }),
+      reason: t("reason.garden", language, { rain: String(weather.rainProbability), soil: String(weather.soilMoisture) }),
       priority: 62,
       meta: {
         [t("weather.rainProb", language)]: `${weather.rainProbability}%`,
@@ -689,7 +689,7 @@ export function getPersonalizedCards(
       recommendation: t(seasonalKey, language),
       updatedAt: ts(weather, language),
       source: weather.source,
-      reason: t("reason.garden.seasonal", language),
+      reason: t("reason.garden.seasonal", language, { rain: String(weather.rainProbability), temp: String(weather.temp), soil: String(weather.soilMoisture) }),
       priority: 58,
     });
   }
@@ -719,7 +719,7 @@ export function getPersonalizedCards(
       recommendation: rec,
       updatedAt: ts(weather, language),
       source: weather.source,
-      reason: t("reason.events", language, { score: String(score) }),
+      reason: t("reason.events", language, { score: String(score), rain: String(weather.rainProbability), temp: String(weather.temp), wind: String(weather.wind) }),
       priority: 70,
     });
 
@@ -764,7 +764,7 @@ export function getPersonalizedCards(
         : t("engine.events.proceed", language),
       updatedAt: ts(weather, language),
       source: weather.source,
-      reason: t("reason.events.forecast", language),
+      reason: t("reason.events.forecast", language, { rain: String(weather.rainProbability), temp: String(weather.temp) }),
       priority: 62,
       meta: {
         days: "7",

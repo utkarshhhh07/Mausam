@@ -14,6 +14,7 @@ import {
   ArrowRight,
   ShieldCheck,
   Info,
+  AlertCircle,
 } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import { useWeather } from "@/hooks/useWeather";
@@ -216,11 +217,19 @@ export function HomePage() {
           <SectionLabel>
             <Sparkles size={12} className="inline" /> {t("home.personalized")}
           </SectionLabel>
-          {allCards.length > 0 && (
-            <span className="text-[11px] font-medium text-slate-400">
-              {t("home.advisoryCount", { n: String(allCards.length) })}
-            </span>
-          )}
+          <div className="flex items-center gap-2">
+            {allCards.length > 0 && (
+              <span className="text-[11px] font-medium text-slate-400">
+                {t("home.advisoryCount", { n: String(allCards.length) })}
+              </span>
+            )}
+            <button
+              onClick={() => navigate("/alerts")}
+              className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2.5 py-1 text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 active:scale-95"
+            >
+              <AlertCircle size={12} /> {t("nav.alerts")} <ArrowRight size={11} />
+            </button>
+          </div>
         </div>
         {cards.length === 0 ? (
           <div className="card p-6 text-center text-sm text-slate-500">

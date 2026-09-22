@@ -36,23 +36,29 @@ const baseHourly = (
 };
 
 const baseDaily = (high: number, low: number, rainMid: number): DailyPoint[] => {
-  const days = ["Today", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const dates = ["22 Aug", "23 Aug", "24 Aug", "25 Aug", "26 Aug", "27 Aug", "28 Aug"];
+  const dayNames = ["Today", "Tomorrow"];
   const conds: DailyPoint["condition"][] = [
     "partly-cloudy", "sunny", "cloudy", "rain", "rain", "partly-cloudy", "sunny",
   ];
-  return days.map((d, i) => ({
-    day: d,
-    dateLabel: dates[i],
-    high: Math.round(high - i * 0.5),
-    low: Math.round(low + i * 0.3),
-    condition: conds[i],
-    rainProbability: i === 3 || i === 4 ? rainMid : i === 2 ? rainMid / 2 : 10,
-    snowfall: 0,
-    snowDepth: 0,
-    sunrise: "06:10",
-    sunset: "18:40",
-  }));
+  const today = new Date();
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(today);
+    d.setDate(d.getDate() + i);
+    const day = i < dayNames.length ? dayNames[i] : d.toLocaleDateString("en", { weekday: "short" });
+    const dateLabel = d.toLocaleDateString("en", { day: "numeric", month: "short" });
+    return {
+      day,
+      dateLabel,
+      high: Math.round(high - i * 0.5),
+      low: Math.round(low + i * 0.3),
+      condition: conds[i],
+      rainProbability: i === 3 || i === 4 ? rainMid : i === 2 ? rainMid / 2 : 10,
+      snowfall: 0,
+      snowDepth: 0,
+      sunrise: "06:10",
+      sunset: "18:40",
+    };
+  });
 };
 
 const mockMarine = {
