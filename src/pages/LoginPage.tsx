@@ -24,7 +24,7 @@ export function LoginPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");
       setAuth(data.user, data.token);
-      navigate("/onboarding/location");
+      navigate("/onboarding/persona");
     } catch (err: any) {
       setError(err.message);
     } finally {
