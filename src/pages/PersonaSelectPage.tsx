@@ -32,10 +32,10 @@ export function PersonaSelectPage() {
             <button
               key={p.id}
               onClick={() => togglePersona(p.id)}
-              className={`relative flex flex-col items-start rounded-3xl p-4 text-left transition active:scale-[0.98] ${
+              className={`selectable relative flex flex-col items-start rounded-3xl p-4 text-left ${
                 active
-                  ? "bg-brand-600 text-white shadow-md"
-                  : "bg-white text-slate-900 ring-1 ring-slate-200"
+                  ? "bg-brand-600 text-white shadow-md ring-2 ring-brand-600"
+                  : "bg-white text-slate-900 ring-1 ring-slate-200 hover:ring-slate-300"
               }`}
             >
               {active && (

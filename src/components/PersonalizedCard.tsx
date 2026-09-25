@@ -17,7 +17,7 @@ export function PersonalizedCardItem({ card }: { card: PersonalizedCard }) {
     : translate(`persona.${card.persona}`, lang);
 
   return (
-    <div className="card p-4 animate-fade-in-up">
+    <div className="card card-interactive p-4 animate-fade-in-up">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-2">
           <span className="text-xl">{card.emoji}</span>

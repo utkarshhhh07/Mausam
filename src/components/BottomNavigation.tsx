@@ -26,7 +26,7 @@ export function BottomNavigation() {
             <NavLink
               key={item.to}
               to={item.to}
-              className="flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 transition"
+              className="flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 transition-all duration-200 ease-out active:scale-90"
             >
               <Icon
                 size={22}
@@ -68,10 +68,10 @@ export function SideNavigation() {
             <NavLink
               key={item.to}
               to={item.to}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ease-out ${
                 active
                   ? "bg-brand-50 text-brand-700"
-                  : "text-slate-600 hover:bg-slate-50"
+                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
               }`}
             >
               <Icon

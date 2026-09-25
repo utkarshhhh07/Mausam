@@ -102,10 +102,10 @@ export function PreferencesPage() {
               <button
                 key={s}
                 onClick={() => toggleHealth(s)}
-                className={`flex w-full items-center justify-between rounded-2xl p-3 text-left text-sm font-medium transition ${
+                className={`selectable flex w-full items-center justify-between rounded-2xl p-3 text-left text-sm font-medium ${
                   active
-                    ? "bg-brand-600 text-white"
-                    : "bg-white text-slate-700 ring-1 ring-slate-200"
+                    ? "bg-brand-600 text-white ring-2 ring-brand-600"
+                    : "bg-white text-slate-700 ring-1 ring-slate-200 hover:ring-slate-300"
                 }`}
               >
                 <span className="flex items-center gap-2">

@@ -1,6 +1,5 @@
 import { Outlet } from "react-router-dom";
 import { BottomNavigation, SideNavigation } from "@/components/BottomNavigation";
-import { DemoModeButton } from "@/components/DemoModeButton";
 import { ChatAssistant } from "@/components/ChatAssistant";
 
 export function AppLayout() {
@@ -10,12 +9,11 @@ export function AppLayout() {
         <SideNavigation />
       </div>
       <div className="mx-auto flex w-full max-w-md flex-col bg-slate-50 lg:min-h-screen lg:max-w-lg lg:border-x lg:border-slate-200">
-        <main className="flex-1 px-4 pb-28 pt-4 lg:pb-10">
+        <main className="page-enter flex-1 px-4 pb-28 pt-4 lg:pb-10">
           <Outlet />
         </main>
         <BottomNavigation />
       </div>
-      <DemoModeButton />
       <ChatAssistant />
     </div>
   );
